@@ -7,6 +7,7 @@ White = (255, 255, 255)
 Black = (0,0,0)
 width = 500
 height = 500
+ran = 1
 font = pygame.font.SysFont('none', 30)
 
 def printmessage(msg, color=Black, pos=(250,250)):
@@ -67,14 +68,15 @@ def runGame2():
             gamepad.fill(White)
             pop()
             pop2()
-            printmessage("Click Rectangle")
-            start_time = pygame.time.get_ticks()
-            pygame.display.update()
-            while not middle_game2:                                                                      
-              for event in pygame.event.get():
-                  if event.type == pygame.MOUSEBUTTONDOWN:
-                    pos2 = pygame.mouse.get_pos()               
-                    if x2-30 < pos2[0] < x2+30 and y2-30 < pos2[1] < y2+30:
+            if 5 < ran:
+                printmessage("Click Rectangle")
+                start_time = pygame.time.get_ticks()
+                pygame.display.update()
+                while not middle_game2:                                                                      
+                  for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                      pos2 = pygame.mouse.get_pos()               
+                      if x2-30 < pos2[0] < x2+30 and y2-30 < pos2[1] < y2+30:
                         end_time = pygame.time.get_ticks()
                         time_taken = end_time - start_time                       
                         tt = "{0:.3f}".format(time_taken/1000)
@@ -83,10 +85,29 @@ def runGame2():
                         pygame.display.update()
                         middle_game2 = True
                         time.sleep(2)
-                        retry()                                       
-
+                        retry()       
+            if ran < 6:
+                printmessage("Click Circle")
+                start_time = pygame.time.get_ticks()
+                pygame.display.update()
+                while not middle_game2:                                                                      
+                  for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                      pos2 = pygame.mouse.get_pos()               
+                      if x1-30 < pos2[0] < x1+30 and y1-30 < pos2[1] < y1+30:
+                        end_time = pygame.time.get_ticks()
+                        time_taken = end_time - start_time                       
+                        tt = "{0:.3f}".format(time_taken/1000)
+                        gamepad.fill(White)
+                        printmessage("You've taken %s sec" %tt)
+                        pygame.display.update()
+                        middle_game2 = True
+                        time.sleep(2)
+                        retry()       
 def retry():
+    global ran
     pygame.init()
+    ran = random.randint(1, 10)
     runGame2()
 
 def initGame():
