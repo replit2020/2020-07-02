@@ -1,50 +1,100 @@
 import pygame
 import random
+import time
 
-def startmessage():
-    global gamepad, start_game
-    start_game = False
-    gamepad.fill(White)
-    font = pygame.font.SysFont('none', 30)
-    pab = font.render('Press any Button', 1, Black)
-    pabrect = pab.get_rect()
-    pabrect.center = (250, 250)
-    gamepad.blit(pab, pabrect)
+pygame.init()
+White = (255, 255, 255)
+Black = (0,0,0)
+width = 500
+height = 500
+font = pygame.font.SysFont('none', 30)
 
-def ballon():
+def printmessage(msg, color=Black, pos=(250,250)):
+    textsurface = font.render(msg, True, Black)
+    textrect = textsurface.get_rect()
+    textrect.center = pos
+    gamepad.blit(textsurface, textrect)
 
+def pop():
+    global gamepad, x1, y1
+    x1 = random.randint(50, 450)
+    y1 = random.randint(50, 450)
+    pygame.draw.circle(gamepad, Black, [x1, y1], 30, 2)
 
-
-
-    
-def runGame():
-  global gamepad, clock
+def pop2():
+    global gamepad, x2, y2
+    x2 = random.randint(50, 450)
+    y2 = random.randint(50, 450)
+    pygame.draw.rect(gamepad, Black, [x2-30, y2-30, 50, 50], 2)
+   
+def runGame1():
+  global gamepad
+  start_game = False
+  middle_game1 = False
   end_game = False
+  while not start_game:
+      gamepad.fill(White)
+      printmessage('Press any Key')
+      pygame.display.update()
+      for event in pygame.event.get():
+          if event.type == pygame.KEYDOWN:
+              start_game = True
+  while not middle_game1:
+      gamepad.fill(White)
+      printmessage('Click Circle')
+      pop()
+      pygame.display.update()
+      while not middle_game1:
+        for event in pygame.event.get():
+          if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            if x1-30 < pos[0] < x1+30 and y1-30 < pos[1] < y1+30:
+              gamepad.fill(White)
+              printmessage("This time We're Recording Time")
+              pygame.display.update()
+              time.sleep(1.5)
+              middle_game1 = True
+              runGame2()
+  
+def runGame2():
+  middle_game2 = False
+  gamepad.fill(White)
+  printmessage('Get Ready and Press any Key')
+  pygame.display.update()
+  while not middle_game2:
+      for event in pygame.event.get():
+          if event.type == pygame.KEYDOWN:
+            gamepad.fill(White)
+            pop()
+            pop2()
+            printmessage("Click Rectangle")
+            start_time = pygame.time.get_ticks()
+            pygame.display.update()
+            while not middle_game2:                                                                      
+              for event in pygame.event.get():
+                  if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos2 = pygame.mouse.get_pos()               
+                    if x2-30 < pos2[0] < x2+30 and y2-30 < pos2[1] < y2+30:
+                        end_time = pygame.time.get_ticks()
+                        time_taken = end_time - start_time                       
+                        tt = "{0:.3f}".format(time_taken/1000)
+                        gamepad.fill(White)
+                        printmessage("You've taken %s sec" %tt)
+                        pygame.display.update()
+                        middle_game2 = True
+                        time.sleep(2)
+                        retry()                                       
 
-  startmessage()
-  for event in pygame.event.get():
-      if event.type == pygame.KEYDOWN:
-          
-  while not end_game:
-    for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-        end_game = True
-    
-    pygame.display.update()
-    clock.tick(60)
-  pygame.quit()
+def retry():
+    pygame.init()
+    runGame2()
 
 def initGame():
-  global gamepad, clock, White, Black
+  global gamepad
   pygame.init()
-  White = (255, 255, 255)
-  Black = (0,0,0)
-  width = 500
-  height = 500
   gamepad = pygame.display.set_mode((width, height))
   pygame.display.set_caption('순발력 테스트')
-  clock = pygame.time.Clock()
-  runGame()
+  gamepad.fill(White)
+  runGame1()
 
 initGame()
-
