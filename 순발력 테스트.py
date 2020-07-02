@@ -26,7 +26,14 @@ def pop2():
     global gamepad, x2, y2
     x2 = random.randint(50, 450)
     y2 = random.randint(50, 450)
-    pygame.draw.rect(gamepad, Black, [x2-30, y2-30, 50, 50], 2)
+    pygame.draw.rect(gamepad, Black, [x2-25, y2-25, 50, 50], 2)
+
+def pop3():
+    global gamepad, x3, y3
+    x3 = random.randint(50, 450)
+    y3 = random.randint(50, 450)
+    pygame.draw.polygon(gamepad, Black, [[x3, y3-34], [x3-30, y3+17], [x3+30, y3+17]], 2)
+
    
 def runGame1():
   global gamepad
@@ -68,7 +75,8 @@ def runGame2():
             gamepad.fill(White)
             pop()
             pop2()
-            if 5 < ran:
+            pop3()
+            if 3 < ran < 7:
                 printmessage("Click Rectangle")
                 start_time = pygame.time.get_ticks()
                 pygame.display.update()
@@ -76,7 +84,7 @@ def runGame2():
                   for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                       pos2 = pygame.mouse.get_pos()               
-                      if x2-30 < pos2[0] < x2+30 and y2-30 < pos2[1] < y2+30:
+                      if x2-25 < pos2[0] < x2+25 and y2-25 < pos2[1] < y2+25:
                         end_time = pygame.time.get_ticks()
                         time_taken = end_time - start_time                       
                         tt = "{0:.3f}".format(time_taken/1000)
@@ -86,7 +94,7 @@ def runGame2():
                         middle_game2 = True
                         time.sleep(2)
                         retry()       
-            if ran < 6:
+            if ran < 4:
                 printmessage("Click Circle")
                 start_time = pygame.time.get_ticks()
                 pygame.display.update()
@@ -94,7 +102,7 @@ def runGame2():
                   for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                       pos2 = pygame.mouse.get_pos()               
-                      if x1-30 < pos2[0] < x1+30 and y1-30 < pos2[1] < y1+30:
+                      if x1-28 < pos2[0] < x1+28 and y1-28 < pos2[1] < y1+28:
                         end_time = pygame.time.get_ticks()
                         time_taken = end_time - start_time                       
                         tt = "{0:.3f}".format(time_taken/1000)
@@ -103,11 +111,30 @@ def runGame2():
                         pygame.display.update()
                         middle_game2 = True
                         time.sleep(2)
-                        retry()       
+                        retry()
+            if ran > 6:
+                printmessage("Click Triangle")
+                start_time = pygame.time.get_ticks()
+                pygame.display.update()
+                while not middle_game2:                                                                      
+                  for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                      pos2 = pygame.mouse.get_pos()               
+                      if x3-25 < pos2[0] < x3+25 and y3-25 < pos2[1] < y3+17:
+                        end_time = pygame.time.get_ticks()
+                        time_taken = end_time - start_time                       
+                        tt = "{0:.3f}".format(time_taken/1000)
+                        gamepad.fill(White)
+                        printmessage("You've taken %s sec" %tt)
+                        pygame.display.update()
+                        middle_game2 = True
+                        time.sleep(2)
+                        retry()
+
 def retry():
     global ran
     pygame.init()
-    ran = random.randint(1, 10)
+    ran = random.randint(1, 9)
     runGame2()
 
 def initGame():
